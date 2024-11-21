@@ -74,3 +74,5 @@ class Warehouse:
 
     def list_items(self):
         return [str(item) for item in self.stock_items]
+
+
