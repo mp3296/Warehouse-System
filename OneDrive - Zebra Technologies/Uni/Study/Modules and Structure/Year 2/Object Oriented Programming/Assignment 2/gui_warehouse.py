@@ -1,19 +1,28 @@
-#gui_warehoue.py is a GUI application that allows users to manage a warehouse inventory system. The application uses the tkinter library to create the GUI components and interacts with the warehouse_system module to manage the inventory data. The application allows users to add, update, and remove items from the inventory, as well as view the list of items in the warehouse.
+# gui_warehouse.py is a GUI application that allows users to manage a warehouse inventory system.
+# The application uses the tkinter library to create the GUI components and interacts with the
+# warehouse_system module to manage the inventory data. The application allows users to add,
+# update, and remove items from the inventory, as well as view the list of items in the warehouse.
+
 import tkinter as tk
 from tkinter import messagebox, ttk
 from warehouse_system import DatabaseManager, Warehouse, ConcreteStockItem
 
 class WarehouseGUI:
+    """Class representing the GUI for the warehouse inventory system."""
+
     def __init__(self, root, warehouse):
+        """Initialize the GUI with the root window and warehouse instance."""
         self.root = root
         self.warehouse = warehouse
 
         self.root.title("Inventory Management System")
         self.root.geometry("600x400")
 
+        # Create the GUI components
         self.create_widgets()
 
     def create_widgets(self):
+        """Create and layout GUI components."""
         # Title
         title_label = tk.Label(self.root, text="Inventory Management System", font=("Helvetica", 16))
         title_label.pack(pady=10)
@@ -49,7 +58,7 @@ class WarehouseGUI:
         exit_button = tk.Button(button_frame, text="Exit", command=self.root.quit)
         exit_button.grid(row=0, column=4, padx=10)
 
-        # Load items
+        # Load items into the treeview
         self.load_items()
 
     def load_items(self):
@@ -154,7 +163,7 @@ class WarehouseGUI:
         update_button.pack(pady=10)
 
     def remove_item(self):
-        """Remove the selected item."""
+        """Remove the selected item from the inventory."""
         selected = self.tree.focus()
         if not selected:
             messagebox.showerror("Error", "No item selected.")

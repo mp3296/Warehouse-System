@@ -1,4 +1,7 @@
-# main.py is a console-based application that uses the Warehouse class to manage inventory items. The user can add, remove, update, and view items in the inventory. The application uses the DatabaseManager class to interact with the SQLite database.
+# main.py is a console-based application that uses the Warehouse class to manage inventory items.
+# The user can add, remove, update, and view items in the inventory.
+# The application uses the DatabaseManager class to interact with the SQLite database.
+
 from warehouse_system import DatabaseManager, Warehouse, ConcreteStockItem
 
 if __name__ == "__main__":
@@ -17,6 +20,7 @@ if __name__ == "__main__":
         choice = input("Enter your choice: ")
 
         if choice == '1':
+            # Add a new item to the inventory
             name = input("Enter item name: ").strip()
             if not name:
                 print("Item name cannot be empty.")
@@ -30,7 +34,7 @@ if __name__ == "__main__":
             except ValueError:
                 print("Invalid quantity. Please enter a non-negative integer.")
                 continue
-            
+
             category = input("Enter item category: ").strip()
             if not category:
                 print("Item category cannot be empty.")
@@ -41,13 +45,14 @@ if __name__ == "__main__":
             print("Item added successfully!")
 
         elif choice == '2':
+            # Remove an item from the inventory
             try:
                 item_id = int(input("Enter item ID to remove: "))
                 item = warehouse.get_item(item_id)
                 if item is None:
                     print("Item with the specified ID does not exist.")
                     continue
-                
+
                 warehouse.remove_item(item_id)
                 print("Item removed successfully!")
 
@@ -55,6 +60,7 @@ if __name__ == "__main__":
                 print("Invalid ID. Please enter a valid integer.")
 
         elif choice == '3':
+            # View the current inventory
             print("\nCurrent Inventory:")
             items = warehouse.list_items()
             if not items:
@@ -64,6 +70,7 @@ if __name__ == "__main__":
                     print(item)
 
         elif choice == '4':
+            # Update an existing item in the inventory
             try:
                 item_id = int(input("Enter item ID to update: "))
                 name = input("Enter new item name (leave blank to keep current): ").strip()
@@ -90,6 +97,7 @@ if __name__ == "__main__":
                 print("Invalid input. Please enter a valid item ID and quantity.")
 
         elif choice == '5':
+            # Exit the application
             print("Exiting the system. Goodbye!")
             break
 
