@@ -44,3 +44,5 @@ if __name__ == "__main__":
             print("Invalid choice. Please try again.")
 
     db_manager.close()
+
+    
