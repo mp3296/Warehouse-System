@@ -1,3 +1,4 @@
+# main.py is a console-based application that uses the Warehouse class to manage inventory items. The user can add, remove, update, and view items in the inventory. The application uses the DatabaseManager class to interact with the SQLite database.
 from warehouse_system import DatabaseManager, Warehouse, ConcreteStockItem
 
 if __name__ == "__main__":

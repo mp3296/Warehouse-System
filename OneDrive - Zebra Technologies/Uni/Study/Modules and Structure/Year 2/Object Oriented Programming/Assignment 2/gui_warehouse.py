@@ -1,3 +1,4 @@
+#gui_warehoue.py is a GUI application that allows users to manage a warehouse inventory system. The application uses the tkinter library to create the GUI components and interacts with the warehouse_system module to manage the inventory data. The application allows users to add, update, and remove items from the inventory, as well as view the list of items in the warehouse.
 import tkinter as tk
 from tkinter import messagebox, ttk
 from warehouse_system import DatabaseManager, Warehouse, ConcreteStockItem
@@ -10,7 +11,6 @@ class WarehouseGUI:
         self.root.title("Inventory Management System")
         self.root.geometry("600x400")
 
-        # Create the GUI components
         self.create_widgets()
 
     def create_widgets(self):

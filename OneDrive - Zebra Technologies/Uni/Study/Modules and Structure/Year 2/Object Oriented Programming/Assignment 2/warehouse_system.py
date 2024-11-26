@@ -1,3 +1,4 @@
+#warehouse.py is a module that contains classes for managing a warehouse inventory system. The module includes a DatabaseManager class for interacting with an SQLite database, a StockItem abstract class, a ConcreteStockItem class that implements the StockItem interface, and a Warehouse class that uses the DatabaseManager to manage inventory items. The Warehouse class provides methods for adding, removing, updating, and listing items in the inventory. The ConcreteStockItem class represents a concrete implementation of a stock item with methods for updating the quantity of the item. The DatabaseManager class handles database operations such as adding, removing, updating, and retrieving items from the database. The module can be used in both console-based and GUI applications to manage inventory data.
 import sqlite3
 from abc import ABC, abstractmethod
 
@@ -93,3 +94,9 @@ class Warehouse:
     def update_item(self, updated_item):
         """Update an existing item in the inventory."""
         self.db_manager.update_item_in_db(updated_item)
+
+class CustomStockItem(StockItem):
+    def __init__(self, item_id, name, quantity, category, custom_field):
+        super().__init__(item_id, name, quantity, category)
+        self.custom_field = custom_field
+        
