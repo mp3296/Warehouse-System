@@ -1,4 +1,3 @@
-# warehouse_system.py
 import sqlite3
 from abc import ABC, abstractmethod
 
@@ -22,7 +21,7 @@ class DatabaseManager:
         self.cursor.execute('''INSERT INTO stock_items (name, quantity, category) 
                                VALUES (?, ?, ?)''', (item.name, item.quantity, item.category))
         self.connection.commit()
-        item.item_id = self.cursor.lastrowid  # Update the item ID after insertion
+        item.item_id = self.cursor.lastrowid
 
     def remove_item_from_db(self, item_id):
         self.cursor.execute('DELETE FROM stock_items WHERE item_id = ?', (item_id,))
@@ -33,10 +32,18 @@ class DatabaseManager:
         rows = self.cursor.fetchall()
         return [ConcreteStockItem(row[0], row[1], row[2], row[3]) for row in rows]
 
+    def update_item_in_db(self, item):
+        self.cursor.execute('''
+            UPDATE stock_items
+            SET name = ?, quantity = ?, category = ?
+            WHERE item_id = ?
+        ''', (item.name, item.quantity, item.category, item.item_id))
+        self.connection.commit()
+
     def close(self):
         self.connection.close()
 
-# Abstract StockItem Class (for abstraction)
+# Abstract StockItem Class
 class StockItem(ABC):
     def __init__(self, item_id, name, quantity, category):
         self.item_id = item_id
@@ -58,21 +65,31 @@ class ConcreteStockItem(StockItem):
             raise ValueError("Quantity cannot be negative.")
         self.quantity += amount
 
-# Warehouse Class (for encapsulation)
+# Warehouse Class
 class Warehouse:
     def __init__(self, db_manager):
         self.db_manager = db_manager
-        self.stock_items = self.db_manager.get_items_from_db()
 
     def add_item(self, item):
-        self.db_manager.add_item_to_db(item)  # Save to database first
-        self.stock_items.append(item)
+        """Add an item to the inventory."""
+        self.db_manager.add_item_to_db(item)
 
     def remove_item(self, item_id):
+        """Remove an item from the inventory by its ID."""
         self.db_manager.remove_item_from_db(item_id)
-        self.stock_items = [item for item in self.stock_items if item.item_id != item_id]
 
     def list_items(self):
-        return [str(item) for item in self.stock_items]
+        """List all items in the inventory."""
+        return self.db_manager.get_items_from_db()
 
+    def get_item(self, item_id):
+        """Get a specific item from the inventory by its ID."""
+        items = self.db_manager.get_items_from_db()
+        for item in items:
+            if item.item_id == item_id:
+                return item
+        return None
 
+    def update_item(self, updated_item):
+        """Update an existing item in the inventory."""
+        self.db_manager.update_item_in_db(updated_item)
