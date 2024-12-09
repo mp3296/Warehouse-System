@@ -1,28 +1,20 @@
-# gui_warehouse.py is a GUI application that allows users to manage a warehouse inventory system.
-# The application uses the tkinter library to create the GUI components and interacts with the
-# warehouse_system module to manage the inventory data. The application allows users to add,
-# update, and remove items from the inventory, as well as view the list of items in the warehouse.
-
+# gui_warehouse.py
 import tkinter as tk
 from tkinter import messagebox, ttk
 from warehouse_system import DatabaseManager, Warehouse, ConcreteStockItem
 
 class WarehouseGUI:
-    """Class representing the GUI for the warehouse inventory system."""
-
     def __init__(self, root, warehouse):
-        """Initialize the GUI with the root window and warehouse instance."""
         self.root = root
         self.warehouse = warehouse
 
         self.root.title("Inventory Management System")
         self.root.geometry("600x400")
 
-        # Create the GUI components
+        # Frames
         self.create_widgets()
 
     def create_widgets(self):
-        """Create and layout GUI components."""
         # Title
         title_label = tk.Label(self.root, text="Inventory Management System", font=("Helvetica", 16))
         title_label.pack(pady=10)
@@ -58,16 +50,25 @@ class WarehouseGUI:
         exit_button = tk.Button(button_frame, text="Exit", command=self.root.quit)
         exit_button.grid(row=0, column=4, padx=10)
 
-        # Load items into the treeview
+        # Load items
         self.load_items()
+
 
     def load_items(self):
         """Load items from the warehouse into the Treeview."""
+        # Clear the current contents of the tree view
         for row in self.tree.get_children():
             self.tree.delete(row)
 
+        # Insert each item into the tree view
         for item in self.warehouse.list_items():
-            self.tree.insert("", tk.END, values=(item.item_id, item.name, item.quantity, item.category))
+            # Access the item's attributes directly
+            item_id = item.item_id
+            name = item.name
+            quantity = item.quantity
+            category = item.category
+            self.tree.insert("", tk.END, values=(item_id, name, quantity, category))
+
 
     def add_item_popup(self):
         """Open a popup window to add a new item."""
@@ -89,12 +90,12 @@ class WarehouseGUI:
 
         def add_item_action():
             try:
-                name = name_entry.get().strip()
-                quantity_str = quantity_entry.get().strip()
+                name = name_entry.get()
+                quantity_str = quantity_entry.get()
                 quantity = int(quantity_str)
                 if quantity < 0:
                     raise ValueError("Quantity cannot be negative.")
-                category = category_entry.get().strip()
+                category = category_entry.get()
 
                 if not name or not category:
                     raise ValueError("Name and category cannot be empty.")
@@ -104,8 +105,8 @@ class WarehouseGUI:
                 self.load_items()
                 messagebox.showinfo("Success", "Item added successfully!")
                 popup.destroy()
-            except ValueError as e:
-                messagebox.showerror("Error", f"Invalid input: {e}")
+            except ValueError:
+                messagebox.showerror("Error", "Invalid quantity. Please enter a non-negative integer.")
 
         add_button = tk.Button(popup, text="Add", command=add_item_action)
         add_button.pack(pady=10)
@@ -141,12 +142,12 @@ class WarehouseGUI:
 
         def update_item_action():
             try:
-                name = name_entry.get().strip()
-                quantity_str = quantity_entry.get().strip()
+                name = name_entry.get()
+                quantity_str = quantity_entry.get()
                 quantity = int(quantity_str)
                 if quantity < 0:
                     raise ValueError("Quantity cannot be negative.")
-                category = category_entry.get().strip()
+                category = category_entry.get()
 
                 if not name or not category:
                     raise ValueError("Name and category cannot be empty.")
@@ -156,14 +157,14 @@ class WarehouseGUI:
                 self.load_items()
                 messagebox.showinfo("Success", "Item updated successfully!")
                 popup.destroy()
-            except ValueError as e:
-                messagebox.showerror("Error", f"Invalid input: {e}")
+            except ValueError:
+                messagebox.showerror("Error", "Invalid quantity. Please enter a non-negative integer.")
 
         update_button = tk.Button(popup, text="Update", command=update_item_action)
         update_button.pack(pady=10)
 
     def remove_item(self):
-        """Remove the selected item from the inventory."""
+        """Remove the selected item."""
         selected = self.tree.focus()
         if not selected:
             messagebox.showerror("Error", "No item selected.")
